@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: 1718136387_create_game_table.sql
+      relativeToChangelogFile: true

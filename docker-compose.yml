@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+  tto-db:
+    image: postgres:14-alpine
+    container_name: tto-database
+    environment:
+      - POSTGRES_DB=tto
+      - POSTGRES_USER=tto
+      - POSTGRES_PASSWORD=tto
+    ports:
+      - "6541:5432"
+    volumes:
+      - /var/lib/postgresql/data/
