@@ -3,7 +3,7 @@ package ru.pikistenev.tictactoe;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = TictactoeApplicationTests.class)
 class TictactoeApplicationTests {
 
 	@Test

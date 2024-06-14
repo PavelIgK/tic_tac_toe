@@ -13,12 +13,15 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
+/**
+ * Сущность для хранения информации о шаге.
+ */
+
 @Entity
 @Table(name = "step")
 @SuperBuilder
 @Getter
 @Setter
-@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "game")

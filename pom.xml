@@ -16,7 +16,6 @@
     <description>Tic tac toe game</description>
 
     <modules>
-        <module>tto-dto</module>
         <module>tto-main</module>
     </modules>
 
@@ -24,6 +23,7 @@
     <properties>
         <java.version>17</java.version>
         <org.mapstruct.version>1.6.0.Beta1</org.mapstruct.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencyManagement>
@@ -55,15 +55,6 @@
                     </configuration>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <systemPropertyVariables>
-                            <spring.profiles.active>test</spring.profiles.active>
-                        </systemPropertyVariables>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
