@@ -3,6 +3,7 @@ package ru.pikistenev.tictactoe.mainservice.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class GameResponse {
     private UUID id;
 
     @Schema(name = "board", description = "состояние доски", example = "[\"X\",\"0\",\"0\",\"X\",\"\",\"\",\"\",\"\",\"\"]")
-    private String[] board;
+    private List<String> board;
 
     @Schema(name = "status", description = "Статус игры", example = "FINISHED")
     private String status;

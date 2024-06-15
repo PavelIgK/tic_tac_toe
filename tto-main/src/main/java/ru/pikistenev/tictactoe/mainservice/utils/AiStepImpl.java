@@ -1,6 +1,7 @@
 package ru.pikistenev.tictactoe.mainservice.utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import ru.pikistenev.tictactoe.mainservice.model.Game;
 @RequiredArgsConstructor
 public class AiStepImpl implements AiStep {
 
+    private final Board board;
 
     @Override
     public Integer findAiStepCell(Game game) {
@@ -30,10 +32,10 @@ public class AiStepImpl implements AiStep {
      */
     private Integer veryEasyGame(Game game) {
         log.debug("[AiStepImpl][veryEasyGame] Определяем ход машины по самому простому алгоритму. gameId = {}", game.getId());
-        String[] board = game.getBoard();
         ArrayList<Integer> freeCells = new ArrayList<>();
-        for (int i = 0; i < board.length; i++) {
-            if (board[i] == null) {
+        List boardCells = board.getBoard(game);
+        for (int i = 0; i < boardCells.size(); i++) {
+            if (boardCells.get(i).equals("")) {
                 freeCells.add(i);
             }
         }

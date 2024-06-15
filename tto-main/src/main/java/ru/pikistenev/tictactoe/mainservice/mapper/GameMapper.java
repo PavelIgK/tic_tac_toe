@@ -1,9 +1,11 @@
 package ru.pikistenev.tictactoe.mainservice.mapper;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.pikistenev.tictactoe.mainservice.dto.GameResponse;
+import ru.pikistenev.tictactoe.mainservice.utils.Board;
 import ru.pikistenev.tictactoe.mainservice.model.Game;
 
 /**
@@ -13,18 +15,13 @@ import ru.pikistenev.tictactoe.mainservice.model.Game;
 @Mapper(componentModel = "spring")
 public interface GameMapper {
 
-    @Mapping(source = "game", target = "board", qualifiedByName = "board")
+    @Mapping(source = "game", target = "board", qualifiedByName = "boardMap")
     GameResponse toGameResponse(Game game);
 
 
-    @Named("board")
-    default String[] boardSetFreeCell(Game game) {
-        String[] board = game.getBoard();
-        for (int i = 0; i < board.length; i++) {
-            if (board[i] == null) {
-             board[i] = "";
-            }
-        }
-        return board;
+    @Named("boardMap")
+    default List<String> boardSetFreeCell(Game game) {
+        return new Board().getBoard(game);
+
     }
 }
