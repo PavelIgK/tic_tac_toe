@@ -100,7 +100,7 @@ public class GameController {
             }
     )
     @PatchMapping("/{cell}")
-    public GameResponse userStep(@PathVariable @Min(0) @Max(8) Integer cell,
+    public GameResponse userStep(@PathVariable @Min(0) @Max(8) int cell,
             HttpSession session) {
         log.debug("Ход пользователя. gameId = {}, cell = {}", session.getAttribute(
                 ttoConfig.getAttrName()), cell);

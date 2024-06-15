@@ -15,7 +15,7 @@ public interface GameService {
      * @param isStartUser true - начинает пользователь, false - начинает машина.
      * @return Новая игра.
      */
-    Game startGame(Boolean isStartUser);
+    Game startGame(boolean isStartUser);
 
     /**
      * Обработать ход пользователя.
@@ -24,7 +24,7 @@ public interface GameService {
      * @param cell ячейка в которую пользователь хочет сделать ход от 0 до 8
      * @return Состояние игры после хода пользователя.
      */
-    Game userStep(UUID gameId, Integer cell);
+    Game userStep(UUID gameId, int cell);
 
     /**
      * Получить текущее состояние игры.

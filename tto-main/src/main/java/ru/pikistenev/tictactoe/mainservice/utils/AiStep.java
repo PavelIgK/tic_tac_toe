@@ -14,5 +14,5 @@ public interface AiStep {
      * @param game Текущее состояние игры.
      * @return номер ячейки от 0 до 8.
      */
-    Integer findAiStepCell(Game game);
+    int findAiStepCell(Game game);
 }

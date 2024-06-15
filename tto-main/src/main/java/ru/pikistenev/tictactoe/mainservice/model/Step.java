@@ -28,9 +28,9 @@ public class Step extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Game game;
-    private Integer cell;
+    private int cell;
 
     @Column(name = "is_user_step")
-    private Boolean isUserStep;
+    private boolean isUserStep;
 
 }

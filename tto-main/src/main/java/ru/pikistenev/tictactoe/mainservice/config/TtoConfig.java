@@ -26,6 +26,6 @@ public class TtoConfig {
     String userSymbol;
 
     @Value("${tto.inactive-time}")
-    Long inactiveTime;
+    long inactiveTime;
 
 }

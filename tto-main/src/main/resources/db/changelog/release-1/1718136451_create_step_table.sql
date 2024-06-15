@@ -12,7 +12,7 @@ create table step
     is_user_step BOOL NOT NULL,
 
     CONSTRAINT pk_step PRIMARY KEY (id),
-    CONSTRAINT fk_step_id_game FOREIGN KEY (game_id) REFERENCES game (id)
+    CONSTRAINT fk_step_id_game FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE CASCADE
 );
 
 COMMENT ON TABLE step IS 'Таблица для хранения информации об играх';

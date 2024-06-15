@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pikistenev.tictactoe.mainservice.config.TtoConfig;
 import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.enums.GameStatus;
+import ru.pikistenev.tictactoe.mainservice.enums.Winner;
 import ru.pikistenev.tictactoe.mainservice.exception.ForbiddenException;
 import ru.pikistenev.tictactoe.mainservice.exception.NotFoundException;
 import ru.pikistenev.tictactoe.mainservice.exception.ValidationException;
@@ -20,7 +21,7 @@ import ru.pikistenev.tictactoe.mainservice.model.Step;
 import ru.pikistenev.tictactoe.mainservice.repository.GameRepository;
 import ru.pikistenev.tictactoe.mainservice.repository.StepRepository;
 import ru.pikistenev.tictactoe.mainservice.utils.AiStep;
-import ru.pikistenev.tictactoe.mainservice.utils.CheckWinner;
+import ru.pikistenev.tictactoe.mainservice.utils.Board;
 
 @Slf4j
 @Service
@@ -32,11 +33,10 @@ public class GameServiceImpl implements GameService {
     private final StepRepository stepRepository;
     private final AiStep aiStep;
     private final TtoConfig ttoConfig;
-    private final CheckWinner checkWinner;
 
     @Override
     @Transactional
-    public Game startGame(Boolean isStartUser) {
+    public Game startGame(boolean isStartUser) {
         log.debug("Запускаем новую игру. Первый ход пользователя = {}", isStartUser);
         //Создаем игру
         Game game = Game.builder()
@@ -66,7 +66,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    public Game userStep(UUID gameId, Integer cell) {
+    public Game userStep(UUID gameId, int cell) {
         log.debug("Обрабатываем ход пользователя. Id игры = {}, Номер ячейки куда хочет походить пользователь = {}",
                 gameId,
                 cell);
@@ -77,7 +77,7 @@ public class GameServiceImpl implements GameService {
             throw new ForbiddenException("Игра уже завершена");
         }
 
-        boolean stepExists = game.getSteps().stream().anyMatch(step -> step.getCell().equals(cell));
+        boolean stepExists = game.getSteps().stream().anyMatch(step -> step.getCell() == cell);
         if (stepExists) {
             throw new ForbiddenException("Данное поле недоступно");
         }
@@ -131,7 +131,7 @@ public class GameServiceImpl implements GameService {
                     "Отмена хода недоступна. Возможные причины: пользователь еще не походил, игра завершена");
         }
 
-        if (stepToCancel.get().get(0).getIsUserStep().equals(stepToCancel.get().get(1).getIsUserStep())) {
+        if (stepToCancel.get().get(0).isUserStep() == stepToCancel.get().get(1).isUserStep()) {
             throw new ValidationException("Ошибка обработки. Последние два хода по времени принадлежат одному игроку.");
         }
 
@@ -145,8 +145,10 @@ public class GameServiceImpl implements GameService {
      * @return true - если победитель определен или ничья. false - если игра продолжается.
      */
     private boolean checkWinner(Game game) {
-        checkWinner.check(game);
-        if (game.getWinner() != null) {
+        Board board = new Board(game);
+        Winner winner = board.checkWinner();
+        if (winner != null) {
+            game.setWinner(winner);
             game.setStatus(GameStatus.FINISHED);
             return true;
         }

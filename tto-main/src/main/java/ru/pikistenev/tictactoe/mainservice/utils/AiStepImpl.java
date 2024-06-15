@@ -12,13 +12,13 @@ import ru.pikistenev.tictactoe.mainservice.model.Game;
 @RequiredArgsConstructor
 public class AiStepImpl implements AiStep {
 
-    private final Board board;
+    private Board board;
 
     @Override
-    public Integer findAiStepCell(Game game) {
+    public int findAiStepCell(Game game) {
         log.debug("Запускаем поиск ячейки для хода машины. gameId = {}", game.getId());
-
         //Заготовка под разное определение следующего хода
+        board = new Board(game);
         return veryEasyGame(game);
     }
 
@@ -31,7 +31,7 @@ public class AiStepImpl implements AiStep {
     private Integer veryEasyGame(Game game) {
         log.debug("Определяем ход машины по самому простому алгоритму. gameId = {}",
                 game.getId());
-        List<Integer> freeCells = board.freeCells(game);
+        List<Integer> freeCells = board.freeCells();
         return freeCells.get(new Random().nextInt(freeCells.size()));
     }
 }

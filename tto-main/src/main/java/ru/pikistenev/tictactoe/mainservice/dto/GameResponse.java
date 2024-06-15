@@ -26,6 +26,9 @@ public class GameResponse {
     @Schema(name = "board", description = "состояние доски", example = "[\"X\",\"0\",\"0\",\"X\",\"\",\"\",\"\",\"\",\"\"]")
     private List<String> board;
 
+    @Schema(name = "prettyBoard", description = "состояние доски в более читаемом виде")
+    private List<String> prettyBoard;
+
     @Schema(name = "status", description = "Статус игры", example = "FINISHED")
     private String status;
 

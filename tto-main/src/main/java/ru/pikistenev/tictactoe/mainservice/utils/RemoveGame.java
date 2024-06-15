@@ -29,7 +29,7 @@ public class RemoveGame {
     @Scheduled(fixedRateString = "${tto.inactive-time}")
     public void removeInactiveGames() {
         log.debug("Стартуем удаление игр брошенных более чем: {} минут назад.",
-                ttoConfig.getInactiveTime().doubleValue() / 1000 / 60);
+                ttoConfig.getInactiveTime() / 1000 / 60);
 
         LocalDateTime oldTime = LocalDateTime.now().minusSeconds(ttoConfig.getInactiveTime() / 1000);
 

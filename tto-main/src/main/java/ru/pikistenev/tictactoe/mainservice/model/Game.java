@@ -35,7 +35,7 @@ import ru.pikistenev.tictactoe.mainservice.enums.Winner;
 public class Game extends BaseEntity {
 
     @Column(name = "is_user_start")
-    private Boolean isUserStart;
+    private boolean isUserStart;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     List<Step> steps;
