@@ -1,12 +1,10 @@
 package ru.pikistenev.tictactoe.mainservice.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.pikistenev.tictactoe.mainservice.enums.UserType;
 import ru.pikistenev.tictactoe.mainservice.model.Game;
 
 @Slf4j

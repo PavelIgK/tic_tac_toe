@@ -19,6 +19,7 @@ import ru.pikistenev.tictactoe.mainservice.repository.GameRepository;
 @Component
 @RequiredArgsConstructor
 public class RemoveGame {
+
     private final GameRepository gameRepository;
     private final TtoConfig ttoConfig;
 
@@ -27,9 +28,10 @@ public class RemoveGame {
      */
     @Scheduled(fixedRateString = "${tto.inactive-time}")
     public void removeInactiveGames() {
-        log.debug("Стартуем удаление игр брошенных более чем: {} минут назад.", ttoConfig.getInactiveTime().doubleValue() / 1000 / 60);
+        log.debug("Стартуем удаление игр брошенных более чем: {} минут назад.",
+                ttoConfig.getInactiveTime().doubleValue() / 1000 / 60);
 
-        LocalDateTime oldTime = LocalDateTime.now().minusSeconds(ttoConfig.getInactiveTime()/1000);
+        LocalDateTime oldTime = LocalDateTime.now().minusSeconds(ttoConfig.getInactiveTime() / 1000);
 
         log.debug("Ишем игры брошенные до {}", oldTime);
         Optional<List<Game>> idsToRemoveTwo = gameRepository.inactiveGame(oldTime);

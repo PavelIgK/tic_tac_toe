@@ -57,7 +57,7 @@ public class CheckWinner {
         winnerCombination.add(Set.of(0, 4, 8));
         winnerCombination.add(Set.of(2, 4, 6));
 
-        for(Set<Integer> combination : winnerCombination) {
+        for (Set<Integer> combination : winnerCombination) {
 
             //Если текущая выигрышная комбинация содержится в ходах машины - она победила
             if (aiPositions.containsAll(combination)) {

@@ -8,17 +8,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.enums.GameStatus;
 import ru.pikistenev.tictactoe.mainservice.enums.Winner;
@@ -35,8 +31,9 @@ import ru.pikistenev.tictactoe.mainservice.enums.Winner;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 public class Game extends BaseEntity {
+
     @Column(name = "is_user_start")
     private Boolean isUserStart;
 

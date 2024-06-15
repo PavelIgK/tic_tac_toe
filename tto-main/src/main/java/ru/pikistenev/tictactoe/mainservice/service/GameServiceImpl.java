@@ -2,10 +2,8 @@ package ru.pikistenev.tictactoe.mainservice.service;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -125,17 +123,19 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public void cancelStep(UUID gameId) {
         log.debug("Обрабатываем запрос на отмену хода. Id игры = {}", gameId);
-        Optional<List<Step>> stepToCancel = stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(gameId, GameStatus.FINISHED);
+        Optional<List<Step>> stepToCancel = stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(
+                gameId, GameStatus.FINISHED);
 
         if (stepToCancel.isEmpty() || stepToCancel.get().size() < 2) {
-            throw new NotFoundException("Отмена хода недоступна. Возможные причины: пользователь еще не походил, игра завершена");
+            throw new NotFoundException(
+                    "Отмена хода недоступна. Возможные причины: пользователь еще не походил, игра завершена");
         }
 
         if (stepToCancel.get().get(0).getIsUserStep().equals(stepToCancel.get().get(1).getIsUserStep())) {
             throw new ValidationException("Ошибка обработки. Последние два хода по времени принадлежат одному игроку.");
         }
 
-        stepRepository.deleteByIdIn(stepToCancel.get().stream().map( Step::getId).toList());
+        stepRepository.deleteByIdIn(stepToCancel.get().stream().map(Step::getId).toList());
     }
 
     /**
