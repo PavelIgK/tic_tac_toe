@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.pikistenev.tictactoe.mainservice.dto.GameResponse;
+import ru.pikistenev.tictactoe.mainservice.enums.UserType;
 import ru.pikistenev.tictactoe.mainservice.utils.Board;
 import ru.pikistenev.tictactoe.mainservice.model.Game;
 
@@ -21,7 +22,14 @@ public interface GameMapper {
 
     @Named("boardMap")
     default List<String> boardSetFreeCell(Game game) {
-        return new Board().getBoard(game);
-
+        List<UserType> userTypeList = new Board().getBoard(game);
+        return userTypeList.stream().map(userType -> {
+            if (userType.equals(UserType.AI)) {
+                return game.getAiSymbol();
+            } else if (userType.equals(UserType.USER)) {
+                return game.getUserSymbol();
+            }
+            return "";
+        }).toList();
     }
 }

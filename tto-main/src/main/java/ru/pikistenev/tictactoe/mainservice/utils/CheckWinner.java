@@ -24,11 +24,11 @@ public class CheckWinner {
      * @param game Игра для проверки.
      */
     public void check(Game game) {
-        log.debug("[CheckWinner][check] Проверяем появился ли победитель в игре. gameId = {}", game.getId());
+        log.debug("Проверяем появился ли победитель в игре. gameId = {}", game.getId());
 
         //Если ходов меньше 5 то нет смысла ничего проверять еще никто не мог выиграть
         if (game.getSteps().size() < 5) {
-            log.debug("[CheckWinner][check] В игре ходов меньше 5, не будем ничего проверять");
+            log.debug("В игре ходов меньше 5, не будем ничего проверять");
             return;
         }
 
@@ -43,8 +43,8 @@ public class CheckWinner {
             }
         });
 
-        log.debug("[CheckWinner][check] Ходы пользователя = {}", userPositions);
-        log.debug("[CheckWinner][check] Ходы машины = {}", aiPositions);
+        log.debug("Ходы пользователя = {}", userPositions);
+        log.debug("Ходы машины = {}", aiPositions);
 
         //Соберем выигрышные вырианты
         List<Set<Integer>> winnerCombination = new ArrayList<>();
@@ -61,26 +61,26 @@ public class CheckWinner {
 
             //Если текущая выигрышная комбинация содержится в ходах машины - она победила
             if (aiPositions.containsAll(combination)) {
-                log.debug("[CheckWinner][check] Победила машина, с комбинацией = {}", combination);
+                log.debug("Победила машина, с комбинацией = {}", combination);
                 game.setWinner(Winner.AI);
                 return;
             }
 
             //Если текущая выигрышная комбинация содержится в ходах пользователя - пользователь победил
             if (userPositions.containsAll(combination)) {
-                log.debug("[CheckWinner][check] Победил пользователь, с комбинацией = {}", combination);
+                log.debug("Победил пользователь, с комбинацией = {}", combination);
                 game.setWinner(Winner.USER);
                 return;
             }
 
-            log.debug("[CheckWinner][check] Для комбинации {}. Победитель не определен идем дальше", combination);
+            log.debug("Для комбинации {}. Победитель не определен идем дальше", combination);
         }
 
         //Если победитель не определен, а все ячейки заполнены - ничья.
         if (game.getWinner() == null && game.getSteps().size() == 9) {
-            log.debug("[CheckWinner][check] Ничья.");
+            log.debug("Ничья.");
             game.setWinner(Winner.DRAW);
         }
-        log.debug("[CheckWinner][check] Проверка наличия победителя завершена. gameId = {}", game.getId());
+        log.debug("Проверка наличия победителя завершена. gameId = {}", game.getId());
     }
 }

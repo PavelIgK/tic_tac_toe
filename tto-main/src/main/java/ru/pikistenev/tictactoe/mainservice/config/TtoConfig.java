@@ -3,6 +3,7 @@ package ru.pikistenev.tictactoe.mainservice.config;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
+@EnableScheduling
 @ConfigurationProperties("application.properties")
 public class TtoConfig {
 
@@ -22,5 +24,8 @@ public class TtoConfig {
 
     @Value("${tto.user-symbol}")
     String userSymbol;
+
+    @Value("${tto.inactive-time}")
+    Long inactiveTime;
 
 }

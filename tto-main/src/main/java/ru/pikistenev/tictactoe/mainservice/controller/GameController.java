@@ -65,7 +65,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     public GameResponse startGame(@RequestParam(required = false, defaultValue = "true") Boolean userStart,
             HttpSession session) {
-        log.debug("[GameController][startGame] Запрос на новую игру. Первый ход пользователя = {}", userStart);
+        log.debug("Запрос на новую игру. Первый ход пользователя = {}", userStart);
         Game game = gameService.startGame(userStart);
         session.setAttribute(ttoConfig.getAttrName(), game.getId());
         return gameMapper.toGameResponse(game);
@@ -102,7 +102,7 @@ public class GameController {
     @PatchMapping("/{cell}")
     public GameResponse userStep(@PathVariable @Min(0) @Max(8) Integer cell,
             HttpSession session) {
-        log.debug("[GameController][userStep] Ход пользователя. gameId = {}, cell = {}", session.getAttribute(
+        log.debug("Ход пользователя. gameId = {}, cell = {}", session.getAttribute(
                 ttoConfig.getAttrName()), cell);
         return gameMapper.toGameResponse(gameService.userStep(getGameIdFromSession(session), cell));
     }
@@ -129,7 +129,7 @@ public class GameController {
     )
     @GetMapping("/board")
     public GameResponse getBoard(HttpSession session) {
-        log.debug("[GameController][getBoard] Запрос доски. gameId = {}",
+        log.debug("Запрос доски. gameId = {}",
                 session.getAttribute(ttoConfig.getAttrName()));
         return gameMapper.toGameResponse(gameService.getBoard(getGameIdFromSession(session)));
     }
@@ -160,7 +160,7 @@ public class GameController {
     )
     @PatchMapping("/cancelStep")
     public GameResponse cancelStep(HttpSession session) {
-        log.debug("[GameController][cancelStep] Запрос на отмену хода. gameId = {}",
+        log.debug("Запрос на отмену хода. gameId = {}",
                 session.getAttribute(ttoConfig.getAttrName()));
         gameService.cancelStep(getGameIdFromSession(session));
         return gameMapper.toGameResponse(gameService.getBoard(getGameIdFromSession(session)));

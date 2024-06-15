@@ -1,5 +1,6 @@
 package ru.pikistenev.tictactoe.mainservice.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,7 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "game")
+@ToString(exclude = "game", callSuper=true)
 public class Step extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

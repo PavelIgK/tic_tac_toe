@@ -39,7 +39,7 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public Game startGame(Boolean isStartUser) {
-        log.debug("[GameServiceImpl][startGame] Запускаем новую игру. Первый ход пользователя = {}", isStartUser);
+        log.debug("Запускаем новую игру. Первый ход пользователя = {}", isStartUser);
         //Создаем игру
         Game game = Game.builder()
                 .isUserStart(isStartUser)
@@ -69,7 +69,7 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public Game userStep(UUID gameId, Integer cell) {
-        log.debug("[GameServiceImpl][userStep] Обрабатываем ход пользователя. Id игры = {}, Номер ячейки куда хочет походить пользователь = {}",
+        log.debug("Обрабатываем ход пользователя. Id игры = {}, Номер ячейки куда хочет походить пользователь = {}",
                 gameId,
                 cell);
         Game game = gameRepository.findById(gameId)
@@ -117,14 +117,14 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game getBoard(UUID gameId) {
-        log.debug("[GameServiceImpl][getBoard] Обрабатываем запрос на получение доски. Id игры = {}", gameId);
+        log.debug("Обрабатываем запрос на получение доски. Id игры = {}", gameId);
         return gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Игра с данным id не найдена"));
     }
 
     @Override
     @Transactional
     public void cancelStep(UUID gameId) {
-        log.debug("[GameServiceImpl][cancelStep] Обрабатываем запрос на отмену хода. Id игры = {}", gameId);
+        log.debug("Обрабатываем запрос на отмену хода. Id игры = {}", gameId);
         Optional<List<Step>> stepToCancel = stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(gameId, GameStatus.FINISHED);
 
         if (stepToCancel.isEmpty() || stepToCancel.get().size() < 2) {

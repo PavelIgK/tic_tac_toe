@@ -1,5 +1,6 @@
 package ru.pikistenev.tictactoe.mainservice.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.enums.GameStatus;
 import ru.pikistenev.tictactoe.mainservice.enums.Winner;
@@ -32,12 +35,12 @@ import ru.pikistenev.tictactoe.mainservice.enums.Winner;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(callSuper=true)
 public class Game extends BaseEntity {
     @Column(name = "is_user_start")
     private Boolean isUserStart;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     List<Step> steps;
 
     //TODO заготовка для разных алгоритмов подбора следующего хода, пока всегда EASY
