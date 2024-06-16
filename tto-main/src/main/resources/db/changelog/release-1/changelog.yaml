@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - include:
+      file: 1718136387_create_game_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: 1718136451_create_step_table.sql
+      relativeToChangelogFile: true
