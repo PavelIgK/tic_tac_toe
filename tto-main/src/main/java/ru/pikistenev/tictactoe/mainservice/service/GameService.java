@@ -2,6 +2,7 @@ package ru.pikistenev.tictactoe.mainservice.service;
 
 
 import java.util.UUID;
+import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.model.Game;
 
 /**
@@ -15,7 +16,7 @@ public interface GameService {
      * @param isStartUser true - начинает пользователь, false - начинает машина.
      * @return Новая игра.
      */
-    Game startGame(boolean isStartUser);
+    Game startGame(boolean isStartUser, GameLevel levelGame);
 
     /**
      * Обработать ход пользователя.

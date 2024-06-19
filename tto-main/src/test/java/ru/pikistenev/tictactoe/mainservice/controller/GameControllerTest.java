@@ -73,13 +73,13 @@ class GameControllerTest {
     @SneakyThrows
     @Test
     void createCorrectGame() {
-        when(gameService.startGame(anyBoolean())).thenReturn(game);
+        when(gameService.startGame(anyBoolean(), any())).thenReturn(game);
         mockMvc.perform(post("/test/")
                         .characterEncoding("UTF_8"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(request().sessionAttribute("gameId", game.getId()));
 
-        verify(gameService, times(1)).startGame(anyBoolean());
+        verify(gameService, times(1)).startGame(anyBoolean(), any());
     }
 
     @SneakyThrows

@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pikistenev.tictactoe.mainservice.config.TtoConfig;
+import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.enums.GameStatus;
 import ru.pikistenev.tictactoe.mainservice.exception.ForbiddenException;
 import ru.pikistenev.tictactoe.mainservice.exception.NotFoundException;
@@ -58,6 +59,7 @@ class GameServiceImplTest {
         UUID id = UUID.randomUUID();
         gameOne = Game.builder()
                 .id(id)
+                .level(GameLevel.EASY)
                 .build();
 
         UUID stepId = UUID.randomUUID();
@@ -94,7 +96,7 @@ class GameServiceImplTest {
     @Test
     void startCorrectGame_UserStart() {
         when(gameRepository.save(any(Game.class))).thenReturn(gameOne);
-        Game createdGame = gameService.startGame(true);
+        Game createdGame = gameService.startGame(true, GameLevel.EASY);
         verify(gameRepository, times(1)).save(any());
         assertEquals(gameOne, createdGame);
     }
@@ -104,7 +106,7 @@ class GameServiceImplTest {
         when(gameRepository.save(any(Game.class))).thenReturn(gameTwo);
         when(stepRepository.save(any(Step.class))).thenReturn(stepOne);
         when(aiStep.findAiStepCell(any(Game.class))).thenReturn(0);
-        Game createdGame = gameService.startGame(false);
+        Game createdGame = gameService.startGame(false, GameLevel.EASY);
         verify(gameRepository, times(2)).save(any());
         verify(stepRepository, times(1)).save(any());
         assertEquals(createdGame.getSteps().get(0).getCell(), 0);

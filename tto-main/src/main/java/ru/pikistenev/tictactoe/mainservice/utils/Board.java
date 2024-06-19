@@ -121,4 +121,34 @@ public class Board {
         }
         return null;
     }
+
+    /**
+     * Метод для совершения хода.
+     *
+     * @param currentCell ячейка куда ходим.
+     * @param userType    кто ходит.
+     */
+    public void move(int currentCell, UserType userType) {
+        board.set(currentCell, userType);
+    }
+
+    /**
+     * Определение ценности хода.
+     *
+     * @return ценность хода. 1 победа, -1 поражение, 0 - ничья или пустой ход.
+     */
+    public int evaluate() {
+        Winner winner = checkWinner();
+        if (winner != null) {
+            if (winner.equals(Winner.AI)) {
+                return 1;
+            } else if (winner.equals(Winner.USER)) {
+                return -1;
+            } else if (winner.equals(Winner.DRAW)) {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
 }

@@ -12,16 +12,17 @@ import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.model.Game;
 import ru.pikistenev.tictactoe.mainservice.model.Step;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @MockBean(RemoveGame.class)
-class AiStepImplTest {
+class AiStepTest {
 
     @InjectMocks
-    AiStepImpl aiStep;
+    AiStep aiStep;
 
     Game gameOne;
 
@@ -30,6 +31,7 @@ class AiStepImplTest {
         UUID id = UUID.randomUUID();
         gameOne = Game.builder()
                 .id(id)
+                .level(GameLevel.EASY)
                 .steps(new ArrayList<>())
                 .build();
 

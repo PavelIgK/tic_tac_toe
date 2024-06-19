@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.pikistenev.tictactoe.mainservice.config.TtoConfig;
 import ru.pikistenev.tictactoe.mainservice.dto.GameResponse;
+import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.exception.ApiError;
 import ru.pikistenev.tictactoe.mainservice.exception.ValidationException;
 import ru.pikistenev.tictactoe.mainservice.mapper.GameMapper;
@@ -48,6 +49,7 @@ public class GameController {
      * POST: Запрос на новую игру.
      *
      * @param userStart true - первый ход пользователя, false - первый ход машины
+     * @param gameLevel уровень игры (EASY, MEDIUM, HARD)
      * @return Игра создана (status code 201)
      */
     @Operation(
@@ -58,15 +60,19 @@ public class GameController {
             responses = {
                     @ApiResponse(responseCode = "201", description = "Игра создана", content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponse.class))
+                    }),
+                    @ApiResponse(responseCode = "500", description = "Некорректный уровень игры", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = IllegalArgumentException.class))
                     })
             }
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GameResponse startGame(@RequestParam(required = false, defaultValue = "true") Boolean userStart,
+            @RequestParam(required = false, defaultValue = "EASY") GameLevel gameLevel,
             HttpSession session) {
-        log.debug("Запрос на новую игру. Первый ход пользователя = {}", userStart);
-        Game game = gameService.startGame(userStart);
+        log.debug("Запрос на новую игру. Первый ход пользователя = {}, уровень игры = {}", userStart, gameLevel);
+        Game game = gameService.startGame(userStart, gameLevel);
         session.setAttribute(ttoConfig.getAttrName(), game.getId());
         return gameMapper.toGameResponse(game);
     }
