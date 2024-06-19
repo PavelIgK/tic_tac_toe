@@ -36,19 +36,18 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    public Game startGame(boolean isStartUser) {
-        log.debug("Запускаем новую игру. Первый ход пользователя = {}", isStartUser);
+    public Game startGame(boolean isStartUser, GameLevel gameLevel) {
+        log.debug("Запускаем новую игру. Первый ход пользователя = {}, уровень игры = {}", isStartUser, gameLevel);
         //Создаем игру
         Game game = Game.builder()
                 .isUserStart(isStartUser)
                 .steps(new ArrayList<>())
-                .level(GameLevel.EASY)
+                .level(gameLevel)
                 .status(GameStatus.IN_PROGRESS)
                 .aiSymbol(ttoConfig.getAiSymbol())
                 .userSymbol(ttoConfig.getUserSymbol())
                 .build();
         Game createdGame = gameRepository.save(game);
-
         //Если первым ходит не пользователь - определим ход машины
         if (!isStartUser) {
             Step currentAiStep = Step.builder()
