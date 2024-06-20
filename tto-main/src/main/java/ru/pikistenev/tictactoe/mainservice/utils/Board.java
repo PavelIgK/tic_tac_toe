@@ -128,7 +128,7 @@ public class Board {
      * @param currentCell ячейка куда ходим.
      * @param userType    кто ходит.
      */
-    public void move(int currentCell, UserType userType) {
+    public void step(int currentCell, UserType userType) {
         board.set(currentCell, userType);
     }
 
