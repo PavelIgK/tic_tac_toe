@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,9 @@ public class Step extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Game game;
     private int cell;
+
+    @Transient
+    private Integer score;
 
     @Column(name = "is_user_step")
     private boolean isUserStep;

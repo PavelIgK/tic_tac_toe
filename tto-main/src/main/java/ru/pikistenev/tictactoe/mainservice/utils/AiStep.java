@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.pikistenev.tictactoe.mainservice.enums.UserType;
 import ru.pikistenev.tictactoe.mainservice.model.Game;
-import ru.pikistenev.tictactoe.mainservice.model.Move;
+import ru.pikistenev.tictactoe.mainservice.model.Step;
 
 /**
  * Подбор следующего хода уровень.
@@ -83,8 +83,8 @@ public class AiStep {
      */
     private Integer hardGame(Game game) {
         board = new Board(game);
-        Move move = minimax(board, UserType.AI);
-        return move.getCell();
+        Step step = minimax(board, UserType.AI);
+        return step.getCell();
     }
 
 
@@ -96,44 +96,44 @@ public class AiStep {
      * @param userType кто ходит в этот момент.
      * @return Лучший ход.
      */
-    private Move minimax(Board board, UserType userType) {
+    private Step minimax(Board board, UserType userType) {
         List<Integer> freeCells = board.freeCells();
         if (board.checkWinner() != null) {
-            return Move.builder().score(board.evaluate()).build();
+            return Step.builder().score(board.evaluate()).build();
         }
 
-        List<Move> moves = new ArrayList<>();
+        List<Step> steps = new ArrayList<>();
 
         for (Integer freeCell : freeCells) {
 
-            board.move(freeCell, userType);
-            Move currentMove;
-            Move score;
+            board.step(freeCell, userType);
+            Step currentStep;
+            Step score;
             if (userType.equals(UserType.AI)) {
                 score = minimax(board, UserType.USER);
             } else {
                 score = minimax(board, UserType.AI);
             }
-            currentMove = Move.builder().cell(freeCell).score(score.getScore()).build();
+            currentStep = Step.builder().cell(freeCell).score(score.getScore()).build();
             board.getBoard().set(freeCell, UserType.FREE);
-            moves.add(currentMove);
+            steps.add(currentStep);
         }
 
-        Move best = null;
+        Step best = null;
         if (UserType.AI.equals(userType)) {
             int minValue = Integer.MIN_VALUE;
-            for (Move move : moves) {
-                if (move.getScore() > minValue) {
-                    best = move;
-                    minValue = move.getScore();
+            for (Step step : steps) {
+                if (step.getScore() > minValue) {
+                    best = step;
+                    minValue = step.getScore();
                 }
             }
         } else {
             int maxValue = Integer.MAX_VALUE;
-            for (Move move : moves) {
-                if (move.getScore() < maxValue) {
-                    best = move;
-                    maxValue = move.getScore();
+            for (Step step : steps) {
+                if (step.getScore() < maxValue) {
+                    best = step;
+                    maxValue = step.getScore();
 
                 }
             }
