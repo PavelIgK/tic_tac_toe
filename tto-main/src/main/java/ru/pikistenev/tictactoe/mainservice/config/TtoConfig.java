@@ -28,4 +28,10 @@ public class TtoConfig {
     @Value("${tto.inactive-time}")
     long inactiveTime;
 
+    @Value("${bot.name}")
+    String botName;
+
+    @Value("${bot.token}")
+    String token;
+
 }

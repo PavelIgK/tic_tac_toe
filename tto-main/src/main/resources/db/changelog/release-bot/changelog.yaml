@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: 1719916778_create_bot_game_table.sql
+      relativeToChangelogFile: true

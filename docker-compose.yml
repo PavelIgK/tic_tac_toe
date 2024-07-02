@@ -29,3 +29,5 @@ services:
       - TTO_AI_SYMBOL=X
       - TTO_USER_SYMBOL=0
       - TTO_API_ENDPOINT=v1
+      - SPRING_JPA_SHOW_SQL=false
+      - BOT_TOKEN=

@@ -8,7 +8,13 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum Winner {
-    AI,
-    USER,
-    DRAW
+    AI ("Победил компьютер."),
+    USER ("Победил пользователь."),
+    DRAW ("Ничья.");
+
+    private String value;
+
+    public String getValue() {
+        return value;
+    }
 }

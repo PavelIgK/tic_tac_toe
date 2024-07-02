@@ -2,3 +2,7 @@ databaseChangeLog:
   - include:
       file: release-1/changelog.yaml
       relativeToChangelogFile: true
+
+  - include:
+      file: release-bot/changelog.yaml
+      relativeToChangelogFile: true
