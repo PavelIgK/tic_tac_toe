@@ -2,7 +2,6 @@ package ru.pikistenev.tictactoe.mainservice.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,11 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pikistenev.tictactoe.mainservice.config.TtoConfig;
 import ru.pikistenev.tictactoe.mainservice.enums.GameLevel;
 import ru.pikistenev.tictactoe.mainservice.enums.GameStatus;
+import ru.pikistenev.tictactoe.mainservice.enums.Winner;
 import ru.pikistenev.tictactoe.mainservice.exception.ForbiddenException;
 import ru.pikistenev.tictactoe.mainservice.exception.NotFoundException;
 import ru.pikistenev.tictactoe.mainservice.exception.ValidationException;
@@ -50,9 +49,10 @@ class GameServiceImplTest {
 
     private Game gameOne;
     private Game gameTwo;
-    private Step stepOne;
-    private Step stepTwo;
-    private Step stepThree;
+    private Game gameFinished;
+    private Step stepUserOne;
+    private Step stepUserTwo;
+    private Step stepAiOne;
 
     @BeforeEach
     public void init() {
@@ -63,21 +63,21 @@ class GameServiceImplTest {
                 .build();
 
         UUID stepId = UUID.randomUUID();
-        stepOne = Step.builder()
+        stepUserOne = Step.builder()
                 .id(stepId)
                 .cell(0)
                 .isUserStep(true)
                 .build();
 
         UUID stepIdTwo = UUID.randomUUID();
-        stepTwo = Step.builder()
+        stepUserTwo = Step.builder()
                 .id(stepIdTwo)
-                .cell(0)
+                .cell(2)
                 .isUserStep(true)
                 .build();
 
         UUID stepIdThree = UUID.randomUUID();
-        stepThree = Step.builder()
+        stepAiOne = Step.builder()
                 .id(stepIdThree)
                 .cell(1)
                 .isUserStep(false)
@@ -88,6 +88,12 @@ class GameServiceImplTest {
         gameTwo = Game.builder()
                 .id(idGameTwo)
                 .steps(steps)
+                .build();
+
+
+        UUID idFinished = UUID.randomUUID();
+        gameFinished = Game.builder()
+                .id(idFinished)
                 .build();
 
 
@@ -104,7 +110,7 @@ class GameServiceImplTest {
     @Test
     void startCorrectGame_AiStart() {
         when(gameRepository.save(any(Game.class))).thenReturn(gameTwo);
-        when(stepRepository.save(any(Step.class))).thenReturn(stepOne);
+        when(stepRepository.save(any(Step.class))).thenReturn(stepUserOne);
         when(aiStep.findAiStepCell(any(Game.class))).thenReturn(0);
         Game createdGame = gameService.startGame(false, GameLevel.EASY);
         verify(gameRepository, times(2)).save(any());
@@ -160,20 +166,75 @@ class GameServiceImplTest {
     }
 
     @Test
-    void getCancel_GameFinished() {
-        Optional<List<Step>> stepsOptional = Optional.of(List.of(stepOne));
-        when(stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(gameOne.getId(),
-                GameStatus.FINISHED)).thenReturn(stepsOptional);
-        assertThrows(NotFoundException.class,
-                () -> gameService.cancelStep(gameOne.getId()));
+    void getCancel_Correct_GameFinished() {
+        gameFinished.setStatus(GameStatus.FINISHED);
+        gameFinished.setWinner(Winner.AI);
+        List<Step> steps = new ArrayList<>();
+        steps.add(stepUserOne);
+        steps.add(stepAiOne);
+        gameFinished.setSteps(steps);
+
+        Optional<Game> gameOptional = Optional.of(gameFinished);
+        assertEquals(2, gameOptional.get().getSteps().size());
+        assertEquals(GameStatus.FINISHED, gameOptional.get().getStatus());
+        assertEquals(Winner.AI, gameOptional.get().getWinner());
+
+        when(gameRepository.findById(any())).thenReturn(gameOptional);
+        gameService.cancelStep(gameFinished.getId());
+
+        assertEquals(0, gameOptional.get().getSteps().size());
+        assertEquals(GameStatus.IN_PROGRESS, gameOptional.get().getStatus());
+        assertNull(gameOptional.get().getWinner());
+    }
+
+
+    @Test
+    void getCancel_Correct_LastStepUser() {
+        List<Step> steps = new ArrayList<>();
+        steps.add(stepUserOne);
+        steps.add(stepAiOne);
+        steps.add(stepUserTwo);
+        gameFinished.setSteps(steps);
+
+        Optional<Game> gameOptional = Optional.of(gameFinished);
+        assertEquals(3, gameOptional.get().getSteps().size());
+        assertEquals(stepUserOne, gameOptional.get().getSteps().get(0));
+        assertEquals(stepAiOne, gameOptional.get().getSteps().get(1));
+        assertEquals(stepUserTwo, gameOptional.get().getSteps().get(2));
+
+        when(gameRepository.findById(any())).thenReturn(gameOptional);
+        gameService.cancelStep(gameFinished.getId());
+        assertEquals(2, gameOptional.get().getSteps().size());
+        assertEquals(stepUserOne, gameOptional.get().getSteps().get(0));
+        assertEquals(stepAiOne, gameOptional.get().getSteps().get(1));
     }
 
 
     @Test
     void getCancel_StepOnePlayer() {
-        Optional<List<Step>> stepsOptional = Optional.of(List.of(stepOne, stepTwo));
-        when(stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(gameOne.getId(),
-                GameStatus.FINISHED)).thenReturn(stepsOptional);
+        gameFinished.setStatus(GameStatus.FINISHED);
+        gameFinished.setWinner(Winner.AI);
+        List<Step> steps = new ArrayList<>();
+        steps.add(stepUserOne);
+        steps.add(stepUserTwo);
+        gameFinished.setSteps(steps);
+
+        Optional<Game> gameOptional = Optional.of(gameFinished);
+
+        assertEquals(2, gameOptional.get().getSteps().size());
+        when(gameRepository.findById(any())).thenReturn(gameOptional);
+
+        assertThrows(ValidationException.class,
+                () -> gameService.cancelStep(gameOne.getId()));
+        assertEquals(2, gameOptional.get().getSteps().size());
+    }
+
+    @Test
+    void getCancel_No_Steps() {
+        Optional<Game> gameOptional = Optional.of(gameOne);
+        assertNull(gameOptional.get().getSteps());
+
+        when(gameRepository.findById(any())).thenReturn(gameOptional);
         assertThrows(ValidationException.class,
                 () -> gameService.cancelStep(gameOne.getId()));
     }
@@ -181,12 +242,23 @@ class GameServiceImplTest {
 
     @Test
     void getCancel_Correct() {
-        Optional<List<Step>> stepsOptional = Optional.of(List.of(stepOne, stepThree));
-        when(stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(gameOne.getId(),
-                GameStatus.FINISHED)).thenReturn(stepsOptional);
-        Mockito.doNothing().when(stepRepository).deleteByIdIn(anyList());
+        gameOne.setStatus(GameStatus.IN_PROGRESS);
+        List<Step> steps = new ArrayList<>();
+        steps.add(stepUserOne);
+        steps.add(stepAiOne);
+        gameOne.setSteps(steps);
+
+        Optional<Game> gameOptional = Optional.of(gameOne);
+        assertEquals(2, gameOptional.get().getSteps().size());
+        assertEquals(GameStatus.IN_PROGRESS, gameOptional.get().getStatus());
+        assertNull(gameOptional.get().getWinner());
+
+        when(gameRepository.findById(any())).thenReturn(gameOptional);
         gameService.cancelStep(gameOne.getId());
-        verify(stepRepository, times(1)).deleteByIdIn(anyList());
+
+        assertEquals(0, gameOptional.get().getSteps().size());
+        assertEquals(GameStatus.IN_PROGRESS, gameOptional.get().getStatus());
+        assertNull(gameOptional.get().getWinner());
     }
 
 
