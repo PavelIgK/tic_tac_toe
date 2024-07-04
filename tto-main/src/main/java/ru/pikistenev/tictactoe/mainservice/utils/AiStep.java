@@ -83,6 +83,12 @@ public class AiStep {
      */
     private Integer hardGame(Game game) {
         board = new Board(game);
+
+        // Для ускорения работы. Если бот ходит первый - вернем рандомно одну из угловых(они самые ценные первым ходом).
+        if (board.freeCells().size() == 9) {
+            List<Integer> bestFirstCells = new ArrayList<>(List.of(0,2,6,8));
+            return bestFirstCells.get(new Random().nextInt(4));
+        }
         Step step = minimax(board, UserType.AI);
         return step.getCell();
     }

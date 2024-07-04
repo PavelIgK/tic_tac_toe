@@ -2,8 +2,6 @@ package ru.pikistenev.tictactoe.mainservice.service;
 
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -122,19 +120,33 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public void cancelStep(UUID gameId) {
         log.debug("Обрабатываем запрос на отмену хода. Id игры = {}", gameId);
-        Optional<List<Step>> stepToCancel = stepRepository.findFirst2ByGameIdAndGame_Status_NotOrderByUpdatedDesc(
-                gameId, GameStatus.FINISHED);
 
-        if (stepToCancel.isEmpty() || stepToCancel.get().size() < 2) {
-            throw new NotFoundException(
-                    "Отмена хода недоступна. Возможные причины: пользователь еще не походил, игра завершена");
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Игра с данным id не найдена"));
+
+
+        if (game.getSteps() == null || game.getSteps().size() < 2) {
+            throw new ValidationException("Отмена хода недоступна: пользователь еще не походил.");
         }
 
-        if (stepToCancel.get().get(0).isUserStep() == stepToCancel.get().get(1).isUserStep()) {
+        int sizeSteps = game.getSteps().size();
+        if (game.getSteps().get(sizeSteps - 1).isUserStep() == game.getSteps().get(sizeSteps - 2).isUserStep()) {
             throw new ValidationException("Ошибка обработки. Последние два хода по времени принадлежат одному игроку.");
         }
 
-        stepRepository.deleteByIdIn(stepToCancel.get().stream().map(Step::getId).toList());
+        //Если последний ход пользователя(случай когда игра завершается ходом пользователя) - удаляем только его.
+        if (game.getSteps().get(sizeSteps - 1).isUserStep()) {
+            game.getSteps().remove(sizeSteps - 1);
+        } else {
+            game.getSteps().remove(sizeSteps - 1);
+            game.getSteps().remove(sizeSteps - 2);
+        }
+
+        //Если игра была завершена, вернем ее статус обратно и уберем победителя.
+        if (game.getStatus() != null && game.getStatus().equals(GameStatus.FINISHED)) {
+            game.setStatus(GameStatus.IN_PROGRESS);
+            game.setWinner(null);
+        }
+        gameRepository.save(game);
     }
 
     /**

@@ -1,8 +1,24 @@
 ###
-POST http://localhost:9090/v1/?userStart=false&gameLevel=HARD
+POST http://localhost:9090/v1/?userStart=true&gameLevel=HARD
 
 ###
+PATCH http://localhost:9090/v1/0
+###
 PATCH http://localhost:9090/v1/1
+###
+PATCH http://localhost:9090/v1/2
+###
+PATCH http://localhost:9090/v1/3
+###
+PATCH http://localhost:9090/v1/4
+###
+PATCH http://localhost:9090/v1/5
+###
+PATCH http://localhost:9090/v1/6
+###
+PATCH http://localhost:9090/v1/7
+###
+PATCH http://localhost:9090/v1/8
 
 ###
 ### 0 1 2
